@@ -1,0 +1,14 @@
+#######################################################################
+# Test for copying block of size 0;
+#######################################################################
+	.pos 0
+main:	irmovq Stack, %rsp  	# Set up stack pointer
+
+	# Set up arguments for copy function and then invoke it
+	irmovq $0, %rdx		# src and dst have 0 elements
+	irmovq dest, %rsi	# dst array
+	irmovq src, %rdi	# src array
+	call ncopy		 
+	call check	        # Call checker code
+	halt                    # should halt with 0xaaaa in %rax
+StartFun:

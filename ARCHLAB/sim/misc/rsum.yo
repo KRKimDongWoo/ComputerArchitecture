@@ -1,0 +1,35 @@
+                            | # Initial code
+0x000: 30f40001000000000000 | 	irmovq Stack,%rsp
+0x00a: 30f72000000000000000 | 	irmovq ele1, %rdi
+0x014: 805000000000000000   | 	call rsum_list
+0x01d: 00                   | 	halt
+                            | 
+                            | # Sample linked list
+0x020:                      | .align 8
+0x020:                      | ele1:
+0x020: 0a00000000000000     | 	.quad 0x00a
+0x028: 3000000000000000     | 	.quad ele2
+0x030:                      | ele2:
+0x030: b000000000000000     | 	.quad 0x0b0
+0x038: 4000000000000000     | 	.quad ele3
+0x040:                      | ele3:
+0x040: 000c000000000000     | 	.quad 0xc00
+0x048: 0000000000000000     | 	.quad 0
+                            | 
+                            | # long rsum_list(list_ptr ls)
+                            | # ls in %rdi
+0x050:                      | rsum_list:
+0x050: a03f                 | 	pushq %rbx		# Save %rbx
+0x052: 6277                 | 	andq %rdi,%rdi		# ls == 0?
+0x054: 738500000000000000   | 	je zret			# Yes, goto zreturn
+0x05d: 50370000000000000000 | 	mrmovq 0(%rdi), %rbx
+0x067: 50770800000000000000 | 	mrmovq 8(%rdi), %rdi
+0x071: 805000000000000000   | 	call rsum_list
+0x07a: 6030                 | 	addq %rbx, %rax
+0x07c: 708700000000000000   | 	jmp done		# Goto done
+0x085: 6300                 | zret:	xorq %rax,%rax		# val = 0
+0x087: b03f                 | done:	popq %rbx		# restore %rbx
+0x089: 90                   | 	ret			# return
+                            | 
+0x100:                      | .pos 0x100
+0x100:                      | Stack:
